@@ -1,49 +1,25 @@
-# Cloud Management and Virtualization System
+# Cloud Management System
 
-### Course: Cloud Computing and Networking  
-**Instructor:** Dr. Mohamed ElGazzar  
----
-
-## Project Overview
-
-The **Cloud Management System** is a command-line based application designed to manage **Virtual Machines (VMs)** using **QEMU** and **containerized environments** using **Docker**.  
-The system provides users with a unified interface to perform virtualization and container management tasks based on user input or configuration files.
-
-This project aims to enhance practical understanding of:
-- Virtualization technologies
-- VM lifecycle management
-- Docker image and container operations
-- System-level automation
+A command-line based **Cloud Management System** that automates **virtual machine creation using QEMU** and **container/image management using Docker**.  
+The system provides a unified interface for managing virtualization resources through simple user interactions.
 
 ---
 
-## Project Objectives
+## Overview
 
-The main objectives of this project are to:
+Managing virtual machines and Docker resources often requires working with multiple commands and tools.  
+This project simplifies that process by offering a **single CLI-based management layer** that allows users to:
 
-- Automate **virtual machine creation** using QEMU
-- Allow VM configuration via:
-  - Interactive user input
-  - Configuration files
-- Enable **Dockerfile creation**
-- Build, list, search, and download **Docker images**
-- Manage **Docker containers**
-- Provide a **user-friendly CLI interface**
-- Apply best practices in code organization and documentation
+- Create and configure virtual machines
+- Generate Dockerfiles
+- Build, search, and pull Docker images
+- Monitor and control running Docker containers
 
 ---
 
-## Technologies Used
+## Key Features
 
-- **Programming Language:** Python
-- **Virtualization:** QEMU
-- **Containerization:** Docker
-- **Interface:** Command-Line Interface (CLI)
----
-
-## System Features
-
-### 🔹 Virtual Machine Management (QEMU)
+### Virtual Machine Management (QEMU)
 - Create virtual machines with custom:
   - CPU cores
   - Memory size
@@ -51,20 +27,29 @@ The main objectives of this project are to:
   - OS ISO image
 - Support for configuration files (JSON)
 
-### 🔹 Dockerfile Management
-- Create Dockerfiles using user-provided content
-- Specify custom save paths
+### Dockerfile Management
+- Create Dockerfiles with user-defined content
+- Specify custom file paths
 
-### 🔹 Docker Image Management
+### Docker Image Management
 - Build Docker images
-- List all local Docker images
-- Search for local images
+- List available local images
+- Search for images locally
 - Search for images on DockerHub
 - Pull/download images from DockerHub
 
-### 🔹 Docker Container Management
+### Docker Container Management
 - List all running containers
-- Stop a container using container ID or name
+- Stop containers by ID or name
+
+---
+
+## Tech Stack
+
+- **Language:** Python 3
+- **Virtualization:** QEMU
+- **Containerization:** Docker
+- **Interface:** Command-Line Interface (CLI)
 
 ---
 
