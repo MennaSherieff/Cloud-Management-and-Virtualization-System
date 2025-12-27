@@ -59,6 +59,10 @@ This project simplifies that process by offering a **single CLI-based management
 cloud-management-system/
 ├── vm/            # vm source code
 ├── docker/        # docker source code
-├── docs/           # User manual & reports
+│   ├── dockerfile_manager.py
+│   ├── image_manager.py
+│   ├── container_manager.py
+├── docs/           # Documentation & reports
+│   ├── docker_documentation.md
 ├── README.md
 ├── main.py
