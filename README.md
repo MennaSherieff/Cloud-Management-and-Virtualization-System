@@ -52,17 +52,26 @@ This project simplifies that process by offering a **single CLI-based management
 - **Interface:** Command-Line Interface (CLI)
 
 ---
+## How to run the program?
+- Open terminal or powershell 
+- cd to the project folder
+- Write 'streamlit run app.py'
+- Open localhost to view the program UI
+---
 
 ## Project Structure
 
 ```text
 cloud-management-system/
 ├── vm/            # vm source code
+│   ├── utils.py
+│   ├── vm_manager.py
 ├── docker/        # docker source code
 │   ├── dockerfile_manager.py
 │   ├── image_manager.py
 │   ├── container_manager.py
 ├── docs/           # Documentation & reports
 │   ├── docker_documentation.md
+│   ├── vm_documentation.md
 ├── README.md
-├── main.py
+├── app.py
