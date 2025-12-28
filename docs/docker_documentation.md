@@ -77,3 +77,33 @@ Pulls a Docker image from the DockerHub.
 #### Outputs:
 - **Success Message:** Prints a message indicating the image was successfully pulled.
 - **Error Message:** Prints if the pull command fails.
+
+---
+
+### 7. list_running_containers()
+Lists all currently running Docker containers.
+
+#### Inputs:
+- None
+
+#### Outputs:
+- **Running Containers:** Displays a table of currently running containers with their details.
+- **Error Handling:**
+  - If Docker is not installed, raises `FileNotFoundError`
+  - If Docker command fails, raises `RuntimeError`
+
+
+---
+
+### 8. stop_container(container_id)
+Stops a running Docker container.
+
+#### Inputs:
+- **Container ID/Name:** The ID or name of the container to stop
+
+#### Outputs:
+- **Success Message:** Confirmation that the container was stopped
+- **Error Handling:**
+  - If Docker is not installed, raises `FileNotFoundError`
+  - If container ID is empty, raises `ValueError`
+  - If container doesn't exist or is not running, raises `RuntimeError`

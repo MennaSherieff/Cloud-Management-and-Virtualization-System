@@ -1,58 +1,55 @@
 import subprocess
 
+
 def list_running_containers():
-    print("\n=== Running Containers ===")
-    subprocess.run(["docker", "ps"])
+    """
+    List all currently running Docker containers.
 
-def list_all_containers():
-    print("\n=== All Containers ===")
-    subprocess.run(["docker", "ps", "-a"])
+    Returns:
+        str: Output of running Docker containers
 
-def stop_container():
-    container_id = input("Enter the container ID or name to stop: ")
-    subprocess.run(["docker", "stop", container_id])
+    Raises:
+        RuntimeError: If Docker is not running
+        subprocess.CalledProcessError: If Docker command fails
+        FileNotFoundError: If Docker is not installed
+    """
+    try:
+        result = subprocess.run(
+            ["docker", "ps"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return result.stdout
+    except FileNotFoundError:
+        raise FileNotFoundError("Docker is not installed.")
+    except subprocess.CalledProcessError:
+        raise RuntimeError("Failed to list running containers.")
 
-def delete_container():
-    container_id = input("Enter the container ID or name to delete: ")
-    subprocess.run(["docker", "rm", container_id])
 
-def main():
-    while True:
-        print("\nDocker Container Management")
-        print("1. List running containers")
-        print("2. List all containers")
-        print("3. Stop a container")
-        print("4. Delete a container")
-        print("5. Exit")
+def stop_container(container_id):
+    """
+    Stop a running Docker container.
 
-        choice = input("Enter your choice: ")
+    Args:
+        container_id: ID or name of the container to stop
 
-        if choice == "1":
-            list_running_containers()
-        elif choice == "2":
-            list_all_containers()
-        elif choice == "3":
-            stop_container()
-        elif choice == "4":
-            delete_container()
-        elif choice == "5":
-            break
-        else:
-            print("Invalid choice. Try again!")
+    Returns:
+        str: Success message after stopping the container
 
-if __name__ == "__main__":
-    main()
+    Raises:
+        ValueError: If container ID is empty
+        subprocess.CalledProcessError: If stopping the container fails
+        FileNotFoundError: If Docker is not installed
+        RuntimeError: If container does not exist or is not running
+    """
+    if not container_id:
+        raise ValueError("Container ID cannot be empty.")
 
-# Testcase for Docker commands
-# docker pull hello-world
-# docker run hello-world
-
-# docker pull alpine
-# docker run -it alpine sh
-
-# docker pull nginx
-# docker run -d -p 8080:80 nginx
-
-# docker pull redis
-# docker run -d --name test-redis redis
-
+    try:
+        subprocess.run(["docker", "stop", container_id], check=True)
+        return f"Container '{container_id}' stopped successfully."
+    except FileNotFoundError:
+        raise FileNotFoundError("Docker is not installed.")
+    except subprocess.CalledProcessError:
+        raise RuntimeError("Failed to stop container. Check if it exists and is running.")

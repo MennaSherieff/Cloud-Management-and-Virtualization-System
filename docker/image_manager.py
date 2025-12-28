@@ -1,112 +1,155 @@
-import os              #file/path operations
-import subprocess      #running external commands (like Docker CLI)
+import subprocess
+import os
+
 
 def build_image(dockerfile_path, image_name):
-    #Lab Syntax: docker build -t <image-name>:<tag>
+    """
+    Build a Docker image from a Dockerfile.
 
-    build_context = os.path.dirname(dockerfile_path)
+    Args:
+        dockerfile_path: Path to the Dockerfile
+        image_name: Name/tag for the Docker image
 
-    command = [
-        "docker", "build",
-        "-t", image_name,
-        "-f", dockerfile_path,
-        build_context
-    ]
+    Returns:
+        str: Success message after building the image
 
-    print("Running:", " ".join(command))
+    Raises:
+        ValueError: If Dockerfile path or image name is invalid
+        FileNotFoundError: If the Dockerfile does not exist
+        subprocess.CalledProcessError: If Docker build fails
+        PermissionError: If access to the path is denied
+    """
+    if not dockerfile_path or not image_name:
+        raise ValueError("Dockerfile path and image name are required.")
 
-    subprocess.run(command, check=True)           #subprocess.run(): Executes the command
+    if not os.path.isfile(dockerfile_path):
+        raise FileNotFoundError("Dockerfile not found.")
 
+    try:
+        build_context = os.path.dirname(dockerfile_path)
+        command = ["docker", "build", "-t", image_name, "-f", dockerfile_path, build_context]
+        subprocess.run(command, check=True)
+        return f"Image '{image_name}' built successfully."
+    except PermissionError:
+        raise PermissionError("Permission denied while accessing Dockerfile.")
+    except subprocess.CalledProcessError:
+        raise subprocess.CalledProcessError(1, "Docker build failed.")
 
 
 def list_images():
-    #Lab Syntax: docker image ls
+    """
+    List all local Docker images.
 
-    print("\nLocal Docker Images")
+    Returns:
+        str: Output of Docker images list
 
+    Raises:
+        RuntimeError: If Docker is not running
+        subprocess.CalledProcessError: If Docker command fails
+        FileNotFoundError: If Docker is not installed
+    """
     try:
-        subprocess.run(["docker", "image", "ls"], check=True)
+        result = subprocess.run(
+            ["docker", "image", "ls"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return result.stdout
+    except FileNotFoundError:
+        raise FileNotFoundError("Docker is not installed.")
     except subprocess.CalledProcessError:
-        print("Failed to list images.")
+        raise RuntimeError("Failed to list Docker images.")
 
-def search_local_images():
-    #Lab Syntax: 
 
-    print("\nSearch Local Docker Images")
+def search_local_images(query):
+    """
+    Search local Docker images by keyword.
 
-    query = input("Enter image name or tag to search: ").strip()
+    Args:
+        query: Search keyword
+
+    Returns:
+        str: Matching images or a not-found message
+
+    Raises:
+        ValueError: If query is empty
+        subprocess.CalledProcessError: If Docker command fails
+        FileNotFoundError: If Docker is not installed
+    """
+    if not query:
+        raise ValueError("Search query cannot be empty.")
 
     try:
         result = subprocess.run(
             ["docker", "images"],
-            capture_output=True,      #Captures command output instead of printing to terminal
-            text=True,                #Returns output as string (not bytes)
+            capture_output=True,
+            text=True,
             check=True
         )
-
-        matches = [line for line in result.stdout.splitlines() if query in line]   #result.stdout.splitlines(): Splits command output into list of lines
-
-
-        if matches:
-            print("\n".join(matches))
-        else:
-            print("No matching images found.")
+        matches = [line for line in result.stdout.splitlines() if query in line]
+        return "\n".join(matches) if matches else "No matching images found."
+    except FileNotFoundError:
+        raise FileNotFoundError("Docker is not installed.")
     except subprocess.CalledProcessError:
-        print("Error searching images.")
+        raise RuntimeError("Failed to search local Docker images.")
 
-def search_dockerhub():
-    #Lab Syntax: docker search <image-name>
 
-    print("\nSearch DockerHub")
+def search_dockerhub(query):
+    """
+    Search Docker Hub for images.
 
-    image_name = input("Enter image name to search on DockerHub: ").strip()
+    Args:
+        query: Search keyword
+
+    Returns:
+        str: Search results from Docker Hub
+
+    Raises:
+        ValueError: If query is empty
+        subprocess.CalledProcessError: If Docker search fails
+        FileNotFoundError: If Docker is not installed
+    """
+    if not query:
+        raise ValueError("Search query cannot be empty.")
 
     try:
-        subprocess.run(
-            ["docker", "search", image_name],
+        result = subprocess.run(
+            ["docker", "search", query],
+            capture_output=True,
+            text=True,
             check=True
         )
+        return result.stdout
+    except FileNotFoundError:
+        raise FileNotFoundError("Docker is not installed.")
     except subprocess.CalledProcessError:
-        print("DockerHub search failed.")
+        raise RuntimeError("Docker Hub search failed.")
 
-def pull_image():
-    #Syntax: docker pull <image-name>
 
-    print("\nPull Docker Image")
+def pull_image(image_name):
+    """
+    Pull a Docker image from Docker Hub.
 
-    image_name = input("Enter image name (e.g., ubuntu:latest): ").strip()
+    Args:
+        image_name: Name of the Docker image
+
+    Returns:
+        str: Success message after pulling the image
+
+    Raises:
+        ValueError: If image name is empty
+        subprocess.CalledProcessError: If pull fails
+        FileNotFoundError: If Docker is not installed
+        RuntimeError: If image does not exist
+    """
+    if not image_name:
+        raise ValueError("Image name cannot be empty.")
 
     try:
-        subprocess.run(
-            ["docker", "pull", image_name],
-            check=True
-        )
-        print(f"Image '{image_name}' pulled successfully.")
+        subprocess.run(["docker", "pull", image_name], check=True)
+        return f"Image '{image_name}' pulled successfully."
+    except FileNotFoundError:
+        raise FileNotFoundError("Docker is not installed.")
     except subprocess.CalledProcessError:
-        print("Failed to pull image.")
-
-
-if __name__ == "__main__":
-    print("1. Build Image")
-    print("2. List Images")
-    print("3. Search Local Images")
-    print("4. Search DockerHub")
-    print("5. Pull Image")
-
-    choice = input("Choose an option: ").strip()
-
-    if choice == "1":
-        dockerfile_path = input("Enter path to Dockerfile: ").strip()
-        image_name = input("Enter image name and tag (e.g., myapp:latest): ").strip()
-        build_image(dockerfile_path, image_name)
-
-    elif choice == "2":
-        list_images()
-    elif choice == "3":
-        search_local_images()
-    elif choice == "4":
-        search_dockerhub()
-    elif choice == "5":
-        pull_image()
-    else:
-        print("Invalid choice.")
+        raise RuntimeError("Failed to pull the image.")
