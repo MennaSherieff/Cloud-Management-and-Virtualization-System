@@ -121,7 +121,7 @@ elif menu == "📦 List Local Docker Images":
 #SEARCH LOCAL IMAGES
 elif menu == "🔍 Search Local Docker Image":
     st.subheader("Search Local Docker Images")
-    query = st.text_input("Search Term")
+    query = st.text_input("Search Name")
     if st.button("Search"):
         try:
             output = search_local_images(query)
@@ -154,7 +154,7 @@ elif menu == "⬇ Pull Docker Image":
 #CONTAINER LIST
 elif menu == "🚀 List Running Containers":
     st.subheader("Running Containers")
-    if st.button("Refresh"):
+    if st.button("Run"):
         try:
             output = list_running_containers()
             st.code(output, language="bash")
@@ -163,7 +163,7 @@ elif menu == "🚀 List Running Containers":
 
 elif menu == "📋 List All Containers":
     st.subheader("All Containers")
-    if st.button("Refresh"):
+    if st.button("List"):
         try:
             output = list_all_containers()
             st.code(output, language="bash")
@@ -191,6 +191,5 @@ elif menu == "🗑 Delete Container":
             st.success(msg)
         except Exception as e:
             st.error(str(e))
-
 
 
